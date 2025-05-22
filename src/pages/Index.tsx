@@ -1,4 +1,5 @@
-import React, { useState, useCallback } from 'react';
+
+import React, { useState, useCallback, useEffect } from 'react';
 import { ThemeProvider } from '@/hooks/useTheme';
 import { Sidebar } from '@/components/Sidebar';
 import { VideoCall } from '@/components/VideoCall';
@@ -6,6 +7,8 @@ import { Chat } from '@/components/Chat';
 import { FriendsList } from '@/components/FriendsList';
 import { Message, Friend, User } from '@/types';
 import { useNavigate } from 'react-router-dom';
+import { Menu } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 // Mock data
 const mockMessages: Message[] = [
@@ -73,9 +76,32 @@ const Index = () => {
   const [currentView, setCurrentView] = useState<'video' | 'chat' | 'friends'>('video');
   const [messages, setMessages] = useState<Message[]>(mockMessages);
   const [friends, setFriends] = useState<Friend[]>(mockFriends);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const currentUserId = 'user1';
   const userCount = 127;
   const navigate = useNavigate();
+
+  // Check if the device is mobile
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkIfMobile();
+    window.addEventListener('resize', checkIfMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkIfMobile);
+    };
+  }, []);
+
+  // Auto close sidebar on mobile when view changes
+  useEffect(() => {
+    if (isMobile) {
+      setSidebarOpen(false);
+    }
+  }, [currentView, isMobile]);
 
   const handleSendMessage = useCallback((content: string) => {
     const newMessage: Message = {
@@ -106,6 +132,10 @@ const Index = () => {
     setCurrentView(view);
   }, []);
 
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
   const renderMainContent = () => {
     switch (currentView) {
       case 'video':
@@ -134,16 +164,46 @@ const Index = () => {
 
   return (
     <ThemeProvider defaultTheme="system" storageKey="chromacall-theme">
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted flex">
-        {/* Sidebar */}
-        <Sidebar
-          currentView={currentView}
-          onViewChange={handleViewChange}
-          userCount={userCount}
-        />
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted flex flex-col md:flex-row">
+        {/* Mobile header with menu button */}
+        <div className="md:hidden flex items-center p-4 border-b">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={toggleSidebar}
+            className="mr-2"
+          >
+            <Menu />
+          </Button>
+          <h1 className="text-xl font-bold bg-gradient-to-r from-chat-primary to-chat-secondary bg-clip-text text-transparent flex-1">
+            ChromaCall
+          </h1>
+        </div>
+        
+        {/* Sidebar - responsive */}
+        <div className={`
+          ${isMobile ? 'mobile-sidebar' : ''} 
+          ${isMobile && sidebarOpen ? 'open' : ''}
+          ${isMobile && !sidebarOpen ? 'closed' : ''}
+          ${isMobile ? 'w-64' : ''}
+        `}>
+          <Sidebar
+            currentView={currentView}
+            onViewChange={handleViewChange}
+            userCount={userCount}
+          />
+        </div>
+        
+        {/* Overlay to close sidebar on mobile */}
+        {isMobile && sidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50 z-40"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
         
         {/* Main Content */}
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col h-full overflow-hidden">
           {renderMainContent()}
         </div>
       </div>

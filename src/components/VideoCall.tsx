@@ -98,9 +98,9 @@ export const VideoCall: React.FC = () => {
       </Dialog>
 
       {/* Video Area */}
-      <div className="flex-1 flex gap-4 p-4">
+      <div className="flex-1 flex flex-col md:flex-row gap-4 p-3 md:p-4 overflow-hidden">
         {/* Remote Video */}
-        <Card className="flex-1 video-container relative min-h-[400px]">
+        <Card className="flex-1 video-container relative min-h-[200px] md:min-h-[400px]">
           {callState.remoteStream ? (
             <video
               ref={remoteVideoRef}
@@ -111,22 +111,39 @@ export const VideoCall: React.FC = () => {
           ) : (
             <div className="flex items-center justify-center h-full bg-muted">
               <div className="text-center">
-                <Monitor className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
-                <p className="text-muted-foreground">Waiting for peer to connect...</p>
+                <Monitor className="w-10 h-10 md:w-16 md:h-16 mx-auto mb-2 md:mb-4 text-muted-foreground" />
+                <p className="text-sm md:text-base text-muted-foreground">Waiting for peer to connect...</p>
               </div>
             </div>
           )}
           
           {/* Connection Status */}
-          <div className="absolute top-4 left-4">
+          <div className="absolute top-2 md:top-4 left-2 md:left-4">
             <Badge variant={connectionStatus === 'connected' ? 'default' : 'secondary'}>
               {connectionStatus}
             </Badge>
           </div>
+          
+          {/* Local Video (shows on top of remote video on mobile) */}
+          <div className="md:hidden absolute bottom-3 right-3 w-1/3 aspect-video rounded-lg overflow-hidden border-2 border-background shadow-lg">
+            {callState.localStream ? (
+              <video
+                ref={localVideoRef}
+                autoPlay
+                playsInline
+                muted
+                className="video-element"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center bg-muted">
+                <Video className="w-6 h-6 text-muted-foreground" />
+              </div>
+            )}
+          </div>
         </Card>
 
-        {/* Local Video */}
-        <Card className="w-80 video-container relative">
+        {/* Local Video (desktop only) */}
+        <Card className="hidden md:block w-80 video-container relative">
           {callState.localStream ? (
             <video
               ref={localVideoRef}
@@ -161,30 +178,30 @@ export const VideoCall: React.FC = () => {
       </div>
 
       {/* Controls */}
-      <div className="p-6 bg-card border-t">
-        <div className="flex justify-center gap-4">
+      <div className="p-3 md:p-6 bg-card border-t">
+        <div className="flex justify-center gap-2 md:gap-4">
           {!callState.isInCall ? (
             <Button
               onClick={handleStartCall}
               size="lg"
-              className="bg-green-600 hover:bg-green-700 text-white px-8"
+              className="bg-green-600 hover:bg-green-700 text-white px-4 md:px-8"
             >
-              <Phone className="w-5 h-5 mr-2" />
-              Start Call
+              <Phone className="w-4 h-4 md:w-5 md:h-5 mr-2" />
+              <span className="text-sm md:text-base">Start Call</span>
             </Button>
           ) : (
-            <div className="flex gap-4">
+            <div className="flex flex-wrap justify-center gap-2 md:gap-4">
               {/* Audio Toggle */}
               <Button
                 onClick={toggleAudio}
                 variant={isAudioMuted ? "destructive" : "outline"}
-                size="lg"
-                className="w-14 h-14 rounded-full"
+                size="sm"
+                className="md:w-14 md:h-14 w-10 h-10 rounded-full"
               >
                 {isAudioMuted ? (
-                  <MicOff className="w-6 h-6" />
+                  <MicOff className="w-4 h-4 md:w-6 md:h-6" />
                 ) : (
-                  <Mic className="w-6 h-6" />
+                  <Mic className="w-4 h-4 md:w-6 md:h-6" />
                 )}
               </Button>
 
@@ -192,13 +209,13 @@ export const VideoCall: React.FC = () => {
               <Button
                 onClick={toggleVideo}
                 variant={isVideoOff ? "destructive" : "outline"}
-                size="lg"
-                className="w-14 h-14 rounded-full"
+                size="sm"
+                className="md:w-14 md:h-14 w-10 h-10 rounded-full"
               >
                 {isVideoOff ? (
-                  <VideoOff className="w-6 h-6" />
+                  <VideoOff className="w-4 h-4 md:w-6 md:h-6" />
                 ) : (
-                  <Video className="w-6 h-6" />
+                  <Video className="w-4 h-4 md:w-6 md:h-6" />
                 )}
               </Button>
 
@@ -206,30 +223,30 @@ export const VideoCall: React.FC = () => {
               <Button
                 onClick={handleSkipUser}
                 variant="secondary"
-                size="lg"
-                className="w-14 h-14 rounded-full"
+                size="sm"
+                className="md:w-14 md:h-14 w-10 h-10 rounded-full"
               >
-                <SkipForward className="w-6 h-6" />
+                <SkipForward className="w-4 h-4 md:w-6 md:h-6" />
               </Button>
 
               {/* Add Friend */}
               <Button
                 onClick={handleAddFriend}
                 variant="outline"
-                size="lg"
-                className="w-14 h-14 rounded-full bg-blue-500/10 hover:bg-blue-500/20 border-blue-500/30"
+                size="sm"
+                className="md:w-14 md:h-14 w-10 h-10 rounded-full bg-blue-500/10 hover:bg-blue-500/20 border-blue-500/30"
               >
-                <UserPlus className="w-6 h-6 text-blue-500" />
+                <UserPlus className="w-4 h-4 md:w-6 md:h-6 text-blue-500" />
               </Button>
 
               {/* End Call */}
               <Button
                 onClick={endCall}
                 variant="destructive"
-                size="lg"
-                className="w-14 h-14 rounded-full bg-red-600 hover:bg-red-700"
+                size="sm"
+                className="md:w-14 md:h-14 w-10 h-10 rounded-full bg-red-600 hover:bg-red-700"
               >
-                <PhoneOff className="w-6 h-6" />
+                <PhoneOff className="w-4 h-4 md:w-6 md:h-6" />
               </Button>
             </div>
           )}

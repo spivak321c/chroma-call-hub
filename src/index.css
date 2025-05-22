@@ -132,4 +132,32 @@
   .status-busy {
     @apply bg-red-500;
   }
+  
+  /* New responsive utility classes */
+  .mobile-only {
+    @apply block md:hidden;
+  }
+  
+  .desktop-only {
+    @apply hidden md:block;
+  }
+  
+  .mobile-sidebar {
+    @apply fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out;
+  }
+  
+  .mobile-sidebar.open {
+    @apply translate-x-0;
+  }
+  
+  .mobile-sidebar.closed {
+    @apply -translate-x-full;
+  }
+}
+
+/* Mobile specific adjustments */
+@media (max-width: 768px) {
+  .chat-message {
+    @apply max-w-[90%];
+  }
 }
