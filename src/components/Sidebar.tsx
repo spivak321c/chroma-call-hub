@@ -5,9 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ThemeToggle } from './ThemeToggle';
+import { useNavigate } from 'react-router-dom';
 
 interface SidebarProps {
-  currentView: 'video' | 'chat' | 'friends';
+  currentView: 'video' | 'chat' | 'friends' | 'settings';
   onViewChange: (view: 'video' | 'chat' | 'friends') => void;
   userCount: number;
 }
@@ -17,6 +18,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onViewChange, 
   userCount 
 }) => {
+  const navigate = useNavigate();
+
   const menuItems = [
     {
       id: 'video' as const,
@@ -37,6 +40,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
       description: 'Manage friends list',
     },
   ];
+
+  const handleSettingsClick = () => {
+    navigate('/settings');
+  };
 
   return (
     <Card className="w-80 h-full flex flex-col bg-sidebar border-sidebar-border">
@@ -101,7 +108,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
         
         <div className="flex gap-2">
           <ThemeToggle />
-          <Button variant="outline" size="icon" className="bg-sidebar-accent/50">
+          <Button 
+            variant="outline" 
+            size="icon" 
+            className={`bg-sidebar-accent/50 ${currentView === 'settings' ? 'ring-2 ring-primary' : ''}`}
+            onClick={handleSettingsClick}
+          >
             <Settings className="w-4 h-4" />
           </Button>
           <Button variant="outline" size="icon" className="bg-sidebar-accent/50">

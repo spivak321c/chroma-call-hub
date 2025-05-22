@@ -1,4 +1,3 @@
-
 import { useState, useRef, useCallback } from 'react';
 import { CallState, WebRTCConfig } from '../types';
 
@@ -36,6 +35,7 @@ export const useWebRTC = () => {
     isInCall: false,
     callId: null,
     isIncoming: false,
+    remotePeer: "anonymous-user", // Default value for anonymity
   });
   
   const [isAudioMuted, setIsAudioMuted] = useState(false);
@@ -96,7 +96,12 @@ export const useWebRTC = () => {
         audio: true 
       });
       localStreamRef.current = stream;
-      setCallState(prev => ({ ...prev, localStream: stream }));
+      setCallState(prev => ({ 
+        ...prev, 
+        localStream: stream,
+        isInCall: true, // Set to true when we start a call
+        callId: `call_${Math.random().toString(36).substring(2, 9)}` // Generate a random call ID
+      }));
       
       const pc = createPeerConnection();
       stream.getTracks().forEach(track => {
@@ -150,6 +155,7 @@ export const useWebRTC = () => {
       isIncoming: false,
       localStream: undefined,
       remoteStream: undefined,
+      remotePeer: undefined,
     });
     
     setIsAudioMuted(false);

@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from 'react';
 import { ThemeProvider } from '@/hooks/useTheme';
 import { Sidebar } from '@/components/Sidebar';
@@ -6,6 +5,7 @@ import { VideoCall } from '@/components/VideoCall';
 import { Chat } from '@/components/Chat';
 import { FriendsList } from '@/components/FriendsList';
 import { Message, Friend, User } from '@/types';
+import { useNavigate } from 'react-router-dom';
 
 // Mock data
 const mockMessages: Message[] = [
@@ -75,6 +75,7 @@ const Index = () => {
   const [friends, setFriends] = useState<Friend[]>(mockFriends);
   const currentUserId = 'user1';
   const userCount = 127;
+  const navigate = useNavigate();
 
   const handleSendMessage = useCallback((content: string) => {
     const newMessage: Message = {
@@ -99,6 +100,10 @@ const Index = () => {
   const handleBlockFriend = useCallback((friendId: string) => {
     setFriends(prev => prev.filter(friend => friend.id !== friendId));
     console.log('Blocked friend:', friendId);
+  }, []);
+
+  const handleViewChange = useCallback((view: 'video' | 'chat' | 'friends') => {
+    setCurrentView(view);
   }, []);
 
   const renderMainContent = () => {
@@ -133,7 +138,7 @@ const Index = () => {
         {/* Sidebar */}
         <Sidebar
           currentView={currentView}
-          onViewChange={setCurrentView}
+          onViewChange={handleViewChange}
           userCount={userCount}
         />
         
