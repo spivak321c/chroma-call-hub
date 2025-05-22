@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,12 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				// Video chat specific colors
+				'video-bg': 'hsl(220, 14%, 96%)',
+				'video-bg-dark': 'hsl(220, 14%, 8%)',
+				'chat-primary': 'hsl(262, 83%, 58%)',
+				'chat-secondary': 'hsl(213, 93%, 67%)',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -84,11 +90,33 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'pulse-ring': {
+					'0%': {
+						transform: 'scale(1)',
+						opacity: '1',
+					},
+					'100%': {
+						transform: 'scale(1.2)',
+						opacity: '0',
+					},
+				},
+				'slide-up': {
+					'0%': {
+						transform: 'translateY(100%)',
+						opacity: '0',
+					},
+					'100%': {
+						transform: 'translateY(0)',
+						opacity: '1',
+					},
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'pulse-ring': 'pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite',
+				'slide-up': 'slide-up 0.3s ease-out',
 			}
 		}
 	},
