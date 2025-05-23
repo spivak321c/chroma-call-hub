@@ -37,3 +37,30 @@ export interface WebRTCConfig {
   iceServers: RTCIceServer[];
   iceCandidatePoolSize: number;
 }
+
+// Websocket message types
+export interface WebSocketMessage {
+  type: string;
+  [key: string]: any;
+}
+
+export interface ChatMessage extends WebSocketMessage {
+  type: 'chat_message';
+  content: string;
+  senderId: string;
+  recipientId?: string;
+  timestamp: string;
+  isPrivate?: boolean;
+}
+
+export interface CallSignalMessage extends WebSocketMessage {
+  type: 'offer' | 'answer' | 'ice-candidate' | 'hangup';
+  callId: string;
+  data?: string;
+}
+
+export interface IncomingCallMessage extends WebSocketMessage {
+  type: 'incoming_call';
+  callId: string;
+  from: string;
+}

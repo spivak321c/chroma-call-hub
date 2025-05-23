@@ -8,6 +8,10 @@ import Index from "./pages/Index";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
+// Import services to ensure they are initialized
+import "@/services/webRTCService";
+import "@/services/chatService";
+
 const queryClient = new QueryClient();
 
 const App = () => (
