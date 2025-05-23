@@ -1,4 +1,3 @@
-
 import { CallState, WebRTCConfig } from '../types';
 
 // WebRTC configuration
@@ -62,7 +61,7 @@ class WebRTCService {
     if (callbacks.onConnectionState) this.connectionStateCallback = callbacks.onConnectionState;
     if (callbacks.onUserCount) this.userCountCallback = callbacks.onUserCount;
     if (callbacks.onRemoteStream) this.remoteStreamCallback = callbacks.onRemoteStream;
-    if (callbacks.onCallState) this.callStateCallback = callbacks.callStateCallback;
+    if (callbacks.onCallState) this.callStateCallback = callbacks.onCallState;
     if (callbacks.onIncomingCall) this.incomingCallCallback = callbacks.onIncomingCall;
   }
 
