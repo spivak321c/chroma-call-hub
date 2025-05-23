@@ -6,7 +6,7 @@ import { VideoCall } from '@/components/VideoCall';
 import { Chat } from '@/components/Chat';
 import { FriendsList } from '@/components/FriendsList';
 import { Message, Friend, User } from '@/types';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -73,7 +73,9 @@ const mockFriends: Friend[] = [
 ];
 
 const Index = () => {
-  const [currentView, setCurrentView] = useState<'video' | 'chat' | 'friends'>('video');
+  const location = useLocation();
+  const initialView = location.state?.initialView || 'video';
+  const [currentView, setCurrentView] = useState<'video' | 'chat' | 'friends'>(initialView);
   const [messages, setMessages] = useState<Message[]>(mockMessages);
   const [friends, setFriends] = useState<Friend[]>(mockFriends);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -96,7 +98,6 @@ const Index = () => {
     };
   }, []);
 
-  // Auto close sidebar on mobile when view changes
   useEffect(() => {
     if (isMobile) {
       setSidebarOpen(false);

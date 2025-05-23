@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,6 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { ThemeProvider } from '@/hooks/useTheme';
 import { Sidebar } from '@/components/Sidebar';
 import { Menu } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Settings: React.FC = () => {
   const [displayName, setDisplayName] = useState('Anonymous User');
@@ -18,6 +18,7 @@ const Settings: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
   const userCount = 127; // Mock data
 
   // Check if the device is mobile
@@ -33,6 +34,11 @@ const Settings: React.FC = () => {
       window.removeEventListener('resize', checkIfMobile);
     };
   }, []);
+
+  const handleViewChange = (view: 'video' | 'chat' | 'friends') => {
+    // Navigate to the main page with the selected view
+    navigate('/', { state: { initialView: view } });
+  };
 
   const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -116,7 +122,7 @@ const Settings: React.FC = () => {
         `}>
           <Sidebar
             currentView="settings"
-            onViewChange={() => {}}
+            onViewChange={handleViewChange}
             userCount={userCount}
           />
         </div>
